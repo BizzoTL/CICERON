@@ -6,6 +6,19 @@ import tensorflow_addons as tfa
 from Bio import SeqIO
 from itertools import product
 import pickle
+import argparse
+
+def parse_args():
+    parser = argparse.ArgumentParser(description="CICERON, mircrobial fermentation peptide classifier", epilog = "https://github.com/BizzoTL/CICERON", formatter_class = argparse.RawDescriptionHelpFormatter)
+    parser.add_argument("-i", "--input_folder", type=str, help="Folder containing the fasta file(s)",required=True)
+    parser.add_argument("-o", "--output_folder", type=str, help="Output folder where to store the results",required=True)
+    parser.add_argument("-s", "--suffix", default="_predicted_peptides", type=str, help="Suffix to add to the name of the input file to generate the final output")
+    return parser.parse_args()
+
+args = parse_args()
+input_folder = args.input_folder
+output_folder = args.output_folder
+suffix = args.suffix
 
 #amino acid position for sparse encoding
 aa_pos = {"A":0,"C":1,"D":2,"E":3,"F":4,"G":5,"H":6,"I":7,"K":8,"L":9,"M":10,"N":11,"P":12,"Q":13,"R":14,"S":15,"T":16,"V":17,"W":18,"Y":19,"-":20}
@@ -82,7 +95,6 @@ def blosum_substitution(peptide_list): #blosum matrix encoding function
 
 def sparse_peptide(peptide_list): #sparse peptide function
     pept_vector = np.zeros((len(peptide_list),100,21,1))
-    counter = 0
     counter_list = 0
     for peptide in peptide_list:
         if len(peptide) > 100:
@@ -113,8 +125,12 @@ def vectorize_peptide(peptide_list): #sparse encoding for NN
             pept_vector[counter_list,j,aa_pos["-"]]=1
         counter_list +=1
         counter = 0
-
-    pept_vector = np.squeeze(pept_vector)
+    counter = 0
+    counter_list = 0
+    if len(peptide_list) == 1:
+        pept_vector = np.squeeze(pept_vector,axis=3)
+    else:
+        pept_vector = np.squeeze(pept_vector)
     return pept_vector
 
 #load all the models(from sklearn and keras presaved models)
@@ -132,10 +148,10 @@ modelli = [antidiabetic,antihypertensive,antioxidant,cardiovascular,celiac,immun
 modelli_NN = [antimicrobial,opioid]
 modelli_nomi = ["antidiabetic","antihypertensive","antioxidant","cardiovascular","celiac","immunomodulatory","neuropeptides"]
 modelli_nomi_NN = ["antimicrobial", "opioid"]
-for filename in os.listdir('feeds_tests/'):
+for filename in os.listdir(input_folder+"/"):
         if filename.endswith('.fasta'):
             #prepare the dataframe to be used for storing the info
-            input_file = "feeds_tests/" +filename
+            input_file = input_folder+"/"+filename
             records = list(SeqIO.parse(input_file, "fasta"))
             data_dict = {"Header": [], "Sequence": []}
             for i, record in enumerate(records):
@@ -143,10 +159,9 @@ for filename in os.listdir('feeds_tests/'):
                 data_dict["Sequence"].append(str(record.seq))
             df = pd.DataFrame.from_dict(data_dict)
             df["Function"] = np.nan
-            print(df)
             appaiati = []
             #search on the unfiltered database if there is a 100% correspondance
-            full_db = pd.read_csv("DB/Peptide_all.csv")
+            full_db = pd.read_csv("Peptide_all.csv")
             for i in range(len(df["Sequence"])):
                 correspondance = []
                 for j in range(len(full_db["Sequence"])):
@@ -170,7 +185,6 @@ for filename in os.listdir('feeds_tests/'):
                 df[modelli_nomi_NN[m]] = predizione.tolist() 
             #predict with sklearn
             for m in range(len(modelli)):
-                print(modelli_nomi[m])
                 if modelli_nomi[m] in ["antioxidant","cardiovascular","celiac","immunomodulatory"]:
                     predizione = modelli[m].predict_proba(threemer_encoded)
                 elif modelli_nomi[m] == "antidiabetic":
@@ -181,4 +195,5 @@ for filename in os.listdir('feeds_tests/'):
                     predizione = modelli[m].predict_proba(blosum_encoding)
                 df[modelli_nomi[m]] = predizione.tolist() 
             #save file with the same name as file in input+_predicted_peptides
-            df.to_csv(filename+"_predicted_peptides.csv", index = False)
+            filename = filename.strip(".fasta")
+            df.to_csv(output_folder+"/"+filename+"_"+suffix+".csv", index = False)
