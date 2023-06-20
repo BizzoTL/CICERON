@@ -1,5 +1,5 @@
 # CICERON
-Classification bIoaCtive pEptides fRom micrObial fermeNtation
+Classification of bIoaCtive pEptides fRom micrObial fermeNtation
 
 CICERON is a script for the functional classification of bioactive peptides specifically trained on BPs obtained from microbial fermentation. Starting from peptide sequences, nine binary classifiers assign a functional prediction to the bioactive peptide. The functional classes that are predicted are the following: Antidiabetic, Antihypertensive, Antimicrobial, Antioxidant, Cardiovascular, Celiac disease, Immunomodulatory, Neuropeptides and Opiopid. For more information see the following paper: ...
 
