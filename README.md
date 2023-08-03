@@ -1,4 +1,4 @@
-# CICERON
+![image](https://github.com/BizzoTL/CICERON/assets/56408956/f82c4e3c-5ac7-49e9-a69c-4bd456ae1dde)# CICERON
 Classification of bIoaCtive pEptides fRom micrObial fermeNtation
 
 CICERON is a script for the functional classification of bioactive peptides specifically trained on BPs obtained from microbial fermentation. Starting from peptide sequences, nine binary classifiers assign a functional prediction to the bioactive peptide. The functional classes that are predicted are the following: Antidiabetic, Antihypertensive, Antimicrobial, Antioxidant, Cardiovascular, Celiac disease, Immunomodulatory, Neuropeptides and Opiopid. For more information see the following paper: ...
@@ -39,3 +39,5 @@ To run CICERON to predict the functional classification of these peptides use th
 ``` python3 model_prediction.py -i path/to/peptide_inputs -o path/to/predicted_peptides -s predicted```
 
 This will return a file called "Peptides_predicted.csv" inside the folder "predicted_peptides".
+Example of output table:
+file:///home/baccus/Pictures/Screenshots/Screenshot%20from%202023-08-03%2014-59-23.png
