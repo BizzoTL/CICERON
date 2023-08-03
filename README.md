@@ -39,6 +39,8 @@ To run CICERON to predict the functional classification of these peptides use th
 ``` python3 model_prediction.py -i path/to/peptide_inputs -o path/to/predicted_peptides -s predicted```
 
 This will return a file called "Peptides_predicted.csv" inside the folder "predicted_peptides".
+
 Example of output table:
 
-![image](https://github.com/BizzoTL/CICERON/assets/56408956/f82c4e3c-5ac7-49e9-a69c-4bd456ae1dde)
+![Screenshot from 2023-08-03 15-03-29](https://github.com/BizzoTL/CICERON/assets/56408956/06da1d4d-7d5a-4d83-869e-7b2c0de6aaeb)
+
