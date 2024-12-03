@@ -6,7 +6,7 @@ CICERON is a script for the functional classification of bioactive peptides spec
 ## Installation
 Create a conda environment with Python 3.9 and packages:
 
-```conda create -n ciceron python=3.9 pandas biopython scikit-learn=1.1.2 numpy tensorflow tensorflow_addons```
+```conda create -n ciceron python=3.9 pandas biopython scikit-learn=1.1.2 numpy tensorflow=2.15```
 ```pip install tensorflow-addons```
 
 To enter the environment:
